@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ estate.name }} - Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f0f8ff;
+    }
+    .card {
+      border: none;
+      box-shadow: 0 0 10px rgba(0, 123, 255, 0.1);
+    }
+    .card-title {
+      color: #0d6efd;
+    }
+    .badge-blue {
+      background-color: #0d6efd;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-light bg-white shadow-sm px-4">
+  <a class="navbar-brand" href="{% url 'index' %}" style="color:#0d6efd;"><strong>Estate Hub</strong></a>
+</nav>
+
+<div class="container py-5">
+  <div class="card p-4">
+    <div class="row g-4">
+      {% if estate.image %}
+      <div class="col-md-6">
+        <img src="{{ estate.image.url }}" alt="{{ estate.name }}" class="img-fluid rounded shadow-sm">
+      </div>
+      {% endif %}
+
+      <div class="col-md-6">
+        <h2 class="card-title">{{ estate.name }}</h2>
+        <p><strong>Area:</strong> {{ estate.area }} m²</p>
+        <p><strong>Location:</strong> {{ estate.city.name }}, {{ estate.district.name }}</p>
+        <p><strong>Category:</strong> {{ estate.category.name }}</p>
+        <p><strong>Geo Location:</strong> {{ estate.geo }}</p>
+        <p class="text-primary h5 mt-3"><strong>Price:</strong> ${{ estate.price|floatformat:2 }}</p>
+        {% if estate.is_active %}
+        <span class="badge bg-success">Available</span>
+        {% else %}
+        <span class="badge bg-secondary">Not Available</span>
+        {% endif %}
+      </div>
+
+      <div class="col-12">
+        <h4 class="text-primary mt-4">Description</h4>
+        <p>{{ estate.description }}</p>
+      </div>
+
+      {% if estate.video %}
+      <div class="col-12">
+        <h5 class="text-primary">Video Tour</h5>
+        <video class="w-100 rounded shadow" controls>
+          <source src="{{ estate.video.url }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
