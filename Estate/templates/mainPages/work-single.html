@@ -167,13 +167,15 @@
 
     <div class="row">
         <div class="col-md-8 m-auto text-left justify-content-center">
-            <p class="display-6 py-4 ps-4 border border-5 border-top-0 border-end-0 border-bottom-0 border-start">
+            <p class="fs-5 py-4 ps-4 border border-5 border-top-0 border-end-0 border-bottom-0 border-start"
+               style="max-width: 100%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
                 <i>
                     {{ estate.description }}
                 </i>
             </p>
         </div>
-    </div><!-- End Qute -->
+    </div>
+
 
 
     <div class="row justify-content-center">
@@ -367,61 +369,29 @@
             <h1 class="h2 py-5">Related Post</h1>
             <div class="col-md-12 text-left justify-content-center">
                 <div class="row gx-5">
-
-
-                    <div class="col-sm-6 col-lg-4 mb-5">
-                        <a href="#" class="related-content card text-decoration-none overflow-hidden h-100">
-                            <img class="related-img card-img-top" src="{% static 'assets/img/related-post-01.jpg' %}" alt="Card image cap">
-                            <div class="related-body card-body p-4">
-                                <h5 class="card-title h6 m-0 semi-bold-600 text-dark">Digital Marketing</h5>
-                                <p class="card-text pt-2 mb-1 light-300 text-dark">
-                                    Lorem ipsum dolor sit amet, consectetur.
-                                </p>
-                                <div class="d-flex justify-content-between">
-                                    <span class="text-primary light-300">Read more</span>
-                                    <div class="light-300">
-                                        <i class='bx-fw bx bx-heart me-1'></i>5
-                                        <i class='bx-fw bx bx-chat    ms-1 me-1'></i>3
+                    <div class="row d-flex flex-wrap">
+                        {% for estate in similar_estates %}
+                        <div class="col-sm-6 col-lg-4 d-flex align-items-stretch mb-4">
+                            <div class="card related-content text-decoration-none overflow-hidden h-100 w-100">
+                                <a href="{% url 'detail_view' estate.id %}">
+                                    <img class="card-img-top related-img" src="{{ estate.image.url|default_if_none:'#' }}" alt="Estate image">
+                                </a>
+                                <div class="card-body d-flex flex-column p-4">
+                                    <h5 class="card-title h6 m-0 semi-bold-600 text-dark">{{ estate.name }}</h5>
+                                    <p class="card-text pt-2 mb-1 light-300 text-dark">
+                                        {{ estate.description|default:"No description available."|truncatechars:100 }}
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                                        <a href="{% url 'detail_view' estate.id %}" class="text-primary light-300">Read more</a>
+                                        <div class="light-300">
+                                            <i class='bx-fw bx bx-heart me-1'></i>31
+                                            <i class='bx-fw bx bx-chat ms-1 me-1'></i>2
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-6 col-lg-4 mb-5">
-                        <a href="#" class="related-content card text-decoration-none overflow-hidden h-100">
-                            <img class="related-img card-img-top" src="{% static 'assets/img/related-post-02.jpg' %}" alt="Card image cap">
-                            <div class="related-body card-body p-4">
-                                <h5 class="card-title h6 m-0 semi-bold-600 text-dark">App Development</h5>
-                                <p class="card-text pt-2 mb-1 light-300 text-dark">
-                                    Tempor incididunt ut labore et dolore.
-                                </p>
-                                <div class="d-flex justify-content-between">
-                                    <span class="text-primary light-300">Read more</span>
-                                    <div class="light-300">
-                                        <i class='bx-fw bx bx-heart me-1'></i>11
-                                        <i class='bx-fw bx bx-chat    ms-1 me-1'></i>9
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-6 col-lg-4 mb-5">
-                        <a href="#" class="related-content card text-decoration-none overflow-hidden h-100">
-                            <img class="related-img card-img-top" src="{% static 'assets/img/related-post-03.jpg' %}" alt="Card image cap">
-                            <div class="related-body card-body p-4">
-                                <h5 class="card-title h6 m-0 semi-bold-600 text-dark">Digital Marketing</h5>
-                                <p class="card-text pt-2 mb-1 light-300 text-dark">
-                                    Consectetur adipiscing elit.
-                                </p>
-                                <div class="d-flex justify-content-between">
-                                    <span class="text-primary light-300">Read more</span>
-                                    <div class="light-300">
-                                        <i class='bx-fw bx bx-heart me-1'></i>31
-                                        <i class='bx-fw bx bx-chat    ms-1 me-1'></i>2
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

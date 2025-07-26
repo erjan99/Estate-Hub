@@ -24,6 +24,7 @@ class District(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     parent_category = models.ForeignKey('self', on_delete=models.PROTECT, null=True, blank=True, verbose_name='Categories')
+    image = models.ImageField(upload_to='media/category_images/', null=True, blank=True)
 
     def __str__(self):
         ancestors = []
