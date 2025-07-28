@@ -1,17 +1,15 @@
 from django.contrib import admin
-from .models import *
+from .models import Category, Estate, City, District, Image,Favourite
 
 class EstateAdmin(admin.ModelAdmin):
-    list_display = ('title', 'price', 'category', 'city', 'district')
-    list_filter = ('category', 'city', 'district')
-    search_fields = ('title', 'description')
+    list_display = ('name', 'category', 'city', 'district', 'price', 'is_active')
+    list_filter = ('category', 'city', 'district', 'is_active')
+    search_fields = ('name', 'description')
 
-admin.site.register(Estate)
+
 admin.site.register(Category)
+admin.site.register(Estate, EstateAdmin)
 admin.site.register(City)
 admin.site.register(District)
 admin.site.register(Image)
-
-
-
-# Register your models here.
+admin.site.register(Favourite)

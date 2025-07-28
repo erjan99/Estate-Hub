@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.core.validators import MinValueValidator
 
@@ -68,3 +69,7 @@ class Image(models.Model):
 
     def __str__(self):
         return f"Image {self.id} for {self.estate.name}"
+
+class Favourite(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favourites')
+    estate = models.ForeignKey(Estate, on_delete=models.CASCADE, related_name='favourites')

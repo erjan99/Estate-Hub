@@ -22,4 +22,19 @@ def filter_cards_by_category(request, category_id):
         'estates': estates,
     })
 
+def user_favourite_estates(request, estate_id):
+    like_exists = Favourite.objects.filter(user=request.user, estate=estate_id).exists()
+    estate = get_object_or_404(Estate, id=estate_id)
+
+    if not like_exists:
+        like = Favourite(
+            user=request.user,
+            estate=estate,
+        )
+        like.save()
+    if like_exists:
+        like = Favourite.objects.get(user=request.user, estate=estate_id)
+        like.delete()
+
+    return render(request, 'mainPages/favourite_estates.html')
 
