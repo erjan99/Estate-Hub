@@ -1,0 +1,112 @@
+{% extends 'mainPages/base.html' %}
+{% load static %}
+
+{% block title %}My Favourite Estates | EstateHub{% endblock %}
+
+{% block content %}
+<!-- Start Banner Hero -->
+
+
+<!-- Start Favourites -->
+<section class="container py-5">
+    {% if favourite_estates %}
+    <div class="row">
+        {% for favourite in favourite_estates %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="position-relative">
+                    {% if favourite.estate.thumbnail %}
+                    <img src="{{ favourite.estate.image.url }}" class="card-img-top" alt="{{ favourite.estate.title }}">
+                    {% else %}
+                    <img src="{{favourite.estate.image.url}}" class="card-img-top" alt="Default Image">
+                    {% endif %}
+                    <button
+                            class="btn-favourite active position-absolute top-0 end-0 m-3"
+                            data-estate-id="{{ favourite.estate.id }}"
+                            onclick="removeFavourite(event, {{ favourite.estate.id }})">
+                        <i class='bx bxs-heart bx-sm'></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{{ favourite.estate.title }}</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted"><i class='bx bx-map'></i> {{ favourite.estate.location }}</span>
+                        <span class="badge bg-primary rounded-pill">{{ favourite.estate.category.name }}</span>
+                    </div>
+                    <p class="card-text">{{ favourite.estate.description|truncatechars:100 }}</p>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong class="text-primary">${{ favourite.estate.price|floatformat:0 }}</strong>
+                        <a href="{% url 'detail_view' favourite.estate.id %}" class="btn btn-outline-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class='bx bx-heart bx-lg text-secondary mb-3'></i>
+        <h3 class="text-secondary">You haven't added any favourites yet</h3>
+        <p class="text-muted mb-4">Browse our listings and click the heart icon to add properties to your favourites</p>
+        <a href="{% url 'index' %}" class="btn btn-primary">Browse Properties</a>
+    </div>
+    {% endif %}
+</section>
+<!-- End Favourites -->
+
+<!-- Add this script to handle favourite removal -->
+<script>
+    function removeFavourite(event, estateId) {
+        event.preventDefault();
+
+        // Redirect to the favourite toggle endpoint with next=favourites
+        window.location.href = `/favourite/${estateId}/?next=favourites`;
+    }
+</script>
+
+<style>
+    .btn-favourite {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        transition: transform 0.2s;
+        z-index: 10;
+    }
+
+    .btn-favourite:hover {
+        transform: scale(1.2);
+    }
+
+    .btn-favourite .bx-heart {
+        color: #ffffff;
+        filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.5));
+    }
+
+    .btn-favourite .bxs-heart {
+        color: #ff3366;
+        filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.3));
+    }
+
+    .card {
+        transition: transform 0.3s;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .badge {
+        font-weight: 500;
+    }
+</style>
+{% endblock %}

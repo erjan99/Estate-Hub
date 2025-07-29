@@ -152,43 +152,115 @@
         <ul class="nav d-flex justify-content-center">
             {% for category in parent_categories %}
             <li class="nav-item mx-lg-4">
-                <a class="filter-btn nav-link btn-outline-primary rounded-pill text-light px-4 light-300" href="#" data-filter=".graphic">{{ category.name }}</a>
+                <a class="filter-btn nav-link btn-outline-primary rounded-pill text-light px-4 light-300"
+                   href="{% url 'filtered_cards' category.id %}">
+                   {{ category.name }}
+                </a>
             </li>
             {% endfor %}
         </ul>
     </div>
 </div>
 
-<section class="container overflow-hidden py-5">
-
-
-    <div class="row gx-5 gx-sm-3 gx-lg-5 gy-lg-5 gy-3 pb-3 projects">
-        <!-- Start Recent Work -->
-        {% for estate in estates|slice:":8" %}
-        <div class="col-xl-3 col-md-4 col-sm-6 project">
-            <a href="{% url 'detail_view' estate.id %}" class="service-work card border-0 text-white shadow-sm overflow-hidden h-100">
-                {% if estate.image %}
-                <div class="card-img-wrapper" style="height: 250px; overflow: hidden;">
-                    <img class="service card-img object-fit-cover w-100 h-100" src="{{ estate.image.url }}" alt="estate {{ estate.name }}">
+<section class="container py-5">
+    {% if estates %}
+    <div class="row">
+        {% for estate in estates %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="position-relative">
+                    {% if estate.image %}
+                    <img src="{{ estate.image.url }}" class="card-img-top" alt="{{ estate.title }}">
+                    {% else %}
+                    <img src="{{ estate.image.url }}" class="card-img-top" alt="Default Image">
+                    {% endif %}
+                    <form method="post" action="{% url 'user_favourite_estates' estate.id %}" style="position: absolute; top: 10px; right: 15px;">
+                        {% csrf_token %}
+                        <button
+                            type="submit"
+                            class="btn-favourite {% if estate.id in liked_estates %}active{% endif %} p-0 border-0"
+                            style="background: none;">
+                            {% if estate.id in liked_estates %}
+                                <i class='bx bxs-heart bx-sm' style="color: #ff3366; filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.3));"></i>
+                            {% else %}
+                                <i class='bx bx-heart bx-sm' style="color: #ffffff; filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.5));"></i>
+                            {% endif %}
+                        </button>
+                    </form>
                 </div>
-                {% else %}
-                <div class="service card-img bg-secondary d-flex align-items-center justify-content-center" style="height: 250px;">
-                    <span class="text-white">No Image</span>
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{{ estate.title }}</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted"><i class='bx bx-map'></i> {{ estate.location }}</span>
+                        <span class="badge bg-primary rounded-pill">{{ estate.category.name }}</span>
+                    </div>
+                    <p class="card-text">{{ estate.description|truncatechars:100 }}</p>
                 </div>
-                {% endif %}
-                <div class="service-work-vertical card-img-overlay d-flex align-items-end">
-                    <div class="service-work-content text-left text-light">
-                        <span class="btn btn-outline-light rounded-pill mb-lg-3 px-lg-4 light-300">{{ estate.name }}</span>
+                <div class="card-footer bg-white border-top-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong class="text-primary">${{ estate.price|floatformat:0 }}</strong>
+                        <a href="{% url 'detail_view' estate.id %}" class="btn btn-outline-primary btn-sm">View Details</a>
                     </div>
                 </div>
-            </a>
+            </div>
         </div>
         {% endfor %}
-        <!-- End Recent Work -->
     </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class='bx bx-heart bx-lg text-secondary mb-3'></i>
+        <h3 class="text-secondary">There is no estates for sale yet</h3>
+        <p class="text-muted mb-4">Try to browse a bit later</p>
+        <a href="{% url 'index' %}" class="btn btn-primary">Home</a>
+    </div>
+    {% endif %}
 </section>
 <!-- Start Recent Work -->
 
 
 {% endblock  %}
 
+{% block extra_css %}
+<style>
+    .btn-favourite {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        transition: transform 0.2s;
+        z-index: 10;
+    }
+
+    .btn-favourite:hover {
+        transform: scale(1.2);
+    }
+
+    .card {
+        transition: transform 0.3s;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .badge {
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function toggleFavourite(event, estateId) {
+        event.preventDefault();
+        window.location.href = `/favourite/${estateId}/`;
+    }
+</script>
+{% endblock %}

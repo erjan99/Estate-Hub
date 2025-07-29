@@ -40,6 +40,8 @@ class MyUser(AbstractBaseUser):
         choices=MyUserRole.choices,
         default=MyUserRole.STANDARD,
     )
+    # In User/models.py, add to MyUser class
+    otp = models.CharField(max_length=6, null=True, blank=True)
 
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
