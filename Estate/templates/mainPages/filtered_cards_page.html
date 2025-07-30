@@ -21,9 +21,9 @@
                             class="btn-favourite {% if estate.id in liked_estates %}active{% endif %} p-0 border-0"
                             style="background: none;">
                             {% if estate.id in liked_estates %}
-                                <i class='bx bxs-heart bx-sm' style="color: #ff3366; filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.3));"></i>
+                                <i class='bx bxs-heart bx-sm' style="color: #ff3366;"></i>
                             {% else %}
-                                <i class='bx bx-heart bx-sm' style="color: #ffffff; filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.5));"></i>
+                                <i class='bx bx-heart bx-sm' style="color: #ff3366;"></i>
                             {% endif %}
                         </button>
                     </form>
@@ -71,6 +71,12 @@
 
     .btn-favourite:hover {
         transform: scale(1.2);
+    }
+
+    .btn-favourite .bx-heart,
+    .btn-favourite .bxs-heart {
+        color: #ff3366 !important;
+        filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.3));
     }
 
     .card {

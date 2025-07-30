@@ -15,20 +15,23 @@
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <div class="position-relative">
-                    {% if favourite.estate.thumbnail %}
+                    {% if favourite.estate.image %}
                     <img src="{{ favourite.estate.image.url }}" class="card-img-top" alt="{{ favourite.estate.title }}">
                     {% else %}
-                    <img src="{{favourite.estate.image.url}}" class="card-img-top" alt="Default Image">
+                    <img src="{% static 'default.jpg' %}" class="card-img-top" alt="Default Image">
                     {% endif %}
-                    <button
-                            class="btn-favourite active position-absolute top-0 end-0 m-3"
-                            data-estate-id="{{ favourite.estate.id }}"
-                            onclick="removeFavourite(event, {{ favourite.estate.id }})">
-                        <i class='bx bxs-heart bx-sm'></i>
-                    </button>
+                    <form method="post" action="{% url 'user_favourite_estates' favourite.estate.id %}?next=favourites" style="position: absolute; top: 10px; right: 15px;">
+                        {% csrf_token %}
+                        <button
+                            type="submit"
+                            class="btn-favourite active p-0 border-0"
+                            style="background: none;">
+                            <i class='bx bxs-heart bx-sm' style="color: #ff3366;"></i>
+                        </button>
+                    </form>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title text-primary">{{ favourite.estate.title }}</h5>
+                    <h5 class="card-title text-primary">{{ favourite.estate.name }}</h5>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted"><i class='bx bx-map'></i> {{ favourite.estate.location }}</span>
                         <span class="badge bg-primary rounded-pill">{{ favourite.estate.category.name }}</span>
@@ -80,13 +83,9 @@
         transform: scale(1.2);
     }
 
-    .btn-favourite .bx-heart {
-        color: #ffffff;
-        filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.5));
-    }
-
+    .btn-favourite .bx-heart,
     .btn-favourite .bxs-heart {
-        color: #ff3366;
+        color: #ff3366 !important;
         filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.3));
     }
 

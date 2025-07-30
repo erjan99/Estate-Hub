@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 
@@ -16,9 +17,13 @@ def index_view(request):
     })
 
 def detail_view(request,estate_id):
-    similar_estates = Estate.objects.filter(category=Estate.objects.get(id=estate_id).category)
+    similar_estates = Estate.objects.filter(category=Estate.objects.get(id=estate_id).category, ).exclude(id=estate_id)
     estate = Estate.objects.get(id=estate_id)
-    return render(request, 'mainPages/work-single.html', context={'estate':estate, 'similar_estates':similar_estates})
+    favourite_amount = Favourite.objects.filter(estate=estate).count()
+    feedbacks = Feedback.objects.filter(estate=estate)
+    return render(request, 'mainPages/work-single.html', context={'estate':estate, 'similar_estates':similar_estates, "favourite_amount":favourite_amount,'feedbacks': feedbacks})
+
+
 
 def about_view(request):
     return render(request, 'mainPages/about.html')
@@ -58,6 +63,12 @@ def user_favourite_estates(request, estate_id):
         category_id = request.GET.get('category_id')
         if category_id:
             return redirect('filtered_cards', category_id=category_id)
+        return redirect('index')
+    elif next_page == 'detail_view':
+        estate_id = request.GET.get('estate_id')
+        if estate_id:
+            return redirect('detail_view', estate_id=estate_id)
+        return redirect('index')
     return redirect('index')
 
 def user_favourite_estates_filter(request):
@@ -66,3 +77,30 @@ def user_favourite_estates_filter(request):
 
     favourite_estates = Favourite.objects.filter(user=request.user)
     return render(request, 'mainPages/favourites.html', {'favourite_estates': favourite_estates})
+
+
+def user_feedback(request, estate_id):
+    estate = get_object_or_404(Estate, id=estate_id)
+
+    if request.method == 'POST':
+        feedback = Feedback(
+            estate=estate,
+            user=request.user,
+            comment=request.POST['inputmessage'],
+        )
+        feedback.save()
+        messages.success(request, "Feedback sent successfully!")
+        return redirect('detail_view', estate.id)
+
+    feedbacks = Feedback.objects.filter(estate=estate)
+    return render(request, 'mainPages/work-single.html', {'estate': estate, 'feedbacks': feedbacks})
+
+# def user_comment_response(request, feedback_id):
+#     feedback = get_object_or_404(Feedback, id=feedback_id)
+
+def feedback_deletion(request, feedback_id):
+    feedback = get_object_or_404(Feedback, id=feedback_id)
+    feedback.delete()
+    return redirect('detail_view', feedback.estate.id)
+
+

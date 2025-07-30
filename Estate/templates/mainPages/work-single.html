@@ -219,139 +219,72 @@
             <h4 class="h5">Comments</h4>
         </div>
     </div>
+    {% if feedbacks %}
+    {% for feedback in feedbacks %}
+    <div class="row pb-4" id="feedback-{{ feedback.id }}">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-sm border-0 position-relative">
+                {% if feedback.user == request.user %}
+                <form method="post" action="{% url 'delete_feedback' feedback.id %}" class="position-absolute top-0 end-0 m-2">
+                    {% csrf_token %}
+                    <a href="{% url 'delete_feedback' feedback.id %}"><button type="submit" class="btn-close" aria-label="Close"></button></a>
+                </form>
+                {% endif %}
 
-    <div class="row pb-4">
-        <div class="worksingle-comment-body col-md-8 m-auto">
-            <div class="d-flex">
-                <div>
-                    <img class="rounded-circle" src="{% static 'assets/img/team-05.jpg' %}" style="width: 50px;">
-                </div>
-                <div class="comment-body">
-                    <div class="comment-header d-flex justify-content-between ms-3">
-                        <div class="header text-start">
-                            <h5 class="h6">John Doe</h5>
-                            <p class="text-muted light-300">10 mins ago</p>
-                        </div>
-                        <a href="#" class="text-decoration-none text-secondary"><i class='bx bxs-share me-2'></i>Reply</a>
+                <!-- COMMENT BODY -->
+                <div class="card-body d-flex align-items-start">
+                    <!-- Avatar -->
+                    <div class="me-3">
+                        {% if request.user.avatar %}
+                        <img src="{{ request.user.avatar }}" class="rounded-circle border" style="width: 50px; height: 50px;" alt="User Avatar">
+                        {% else %}
+                        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" class="rounded-circle border" style="width: 50px; height: 50px;" alt="Default Avatar">
+                        {% endif %}
                     </div>
-                    <div class="footer">
-                        <div class="card-body border ms-3 light-300">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                            quis nostrud exercitation ullamco.
+
+                    <!-- Content -->
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-0">{{ feedback.user.username }}</h6>
+                                <small class="text-muted">{{ feedback.created_at }}</small>
+                            </div>
+                            {% if feedback.user != request.user %}
+                            <a href="#" class="text-decoration-none text-secondary small">
+                                <i class="bx bxs-share me-1"></i>Reply
+                            </a>
+                            {% endif %}
+                        </div>
+                        <div class="mt-3 p-3 bg-light rounded border">
+                            {{ feedback.comment }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div><!-- End Comment -->
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="text-center text-muted py-4">
+        <p>No feedback yet. Be the first to comment!</p>
+    </div>
+    {% endif %}
 
 
-    <div class="row pb-4">
-        <div class="col-lg-8 m-auto">
-            <div class="d-flex">
-                <div>
-                    <img class="rounded-circle" src="{% static 'assets/img/team-01.jpg' %}" style="width: 50px;">
-                </div>
-                <div class="comment-body">
-                    <div class="comment-header d-flex justify-content-between ms-3">
-                        <div class="header text-start">
-                            <h5 class="h6">Jane Doe</h5>
-                            <p class="text-muted light-300">5 mins ago</p>
-                        </div>
-                        <a href="#" class="text-decoration-none text-secondary"><i class='bx bxs-share me-2'></i>Reply</a>
-                    </div>
-                    <div class="footer">
-                        <div class="card-body border ms-3 light-300">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                            quis.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div><!-- End Comment -->
-
-
-    <div class="row pb-4">
-        <div class="col-lg-8 m-auto">
-            <div class="d-flex ml-4">
-                <div>
-                    <img class="rounded-circle" src="{% static 'assets/img/team-05.jpg' %}" style="width: 50px;">
-                </div>
-                <div class="comment-body">
-                    <div class="comment-header d-flex justify-content-between ms-3">
-                        <div class="header text-start">
-                            <h5 class="h6">John Doe</h5>
-                            <p class="text-muted light-300">15 mins ago</p>
-                        </div>
-                        <a href="#" class="text-decoration-none text-secondary"><i class='bx bxs-share me-2'></i>Reply</a>
-                    </div>
-                    <div class="footer">
-                        <div class="card-body border ms-3 light-300">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                            quis nostrud exercitation ullamco.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div><!-- End Comment -->
-
-
-    <div class="row pb-4">
-        <div class="col-lg-8 m-auto">
-            <div class="d-flex ml-5">
-                <div>
-                    <img class="rounded-circle" src="{% static 'assets/img/team-01.jpg' %}" style="width: 50px;">
-                </div>
-                <div class="comment-body">
-                    <div class="comment-header d-flex justify-content-between ms-3">
-                        <div class="header text-start">
-                            <h5 class="h6">Jane Doe</h5>
-                            <p class="text-muted light-300">16 mins ago</p>
-                        </div>
-                        <a href="#" class="text-decoration-none text-secondary"><i class='bx bxs-share me-2'></i>Reply</a>
-                    </div>
-                    <div class="footer">
-                        <div class="card-body border ms-3 light-300">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                            quis.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div><!-- End Comment -->
 
 
     <div class="row pb-4">
         <div class="worksingle-comment-footer col-lg-8 m-auto">
             <h4 class="h5">Leave Comment</h4>
-            <form class="col-md-12 m-auto" method="POST" action="#" role="form">
-
+            <form class="col-md-12 m-auto" method="POST" action="{% url 'user_feedback' estate.id %}" role="form">
+                {% csrf_token %}
                 <div class="form-group">
-                    <label class="pb-2 pt-sm-0 pt-4 light-300" for="inputmessage">Your Comment</label>
                     <textarea class="form-control form-control-lg light-300" id="inputmessage" name="inputmessage" placeholder="Your Comment" rows="5"></textarea>
-                </div>
-
-                <div class="row py-4">
-                    <div class="col-lg-6">
-                        <label class="pb-2 light-300" for="inputname">Name</label>
-                        <input type="text" class="form-control form-control-lg light-300" id="inputname" name="inputname" placeholder="Name">
-                    </div>
-                    <div class="col-lg-6">
-                        <label class="pb-2 pt-sm-0 pt-4 light-300" for="inputemail">Email</label>
-                        <input type="email" class="form-control form-control-lg light-300" id="inputemail" name="inputemail" placeholder="Email">
-                    </div>
                 </div>
 
                 <div class="form-row pt-2">
                     <div class="col-md-12 col-10 text-end">
-                        <button type="submit" class="btn btn-secondary text-white px-md-4 px-2 py-md-3 py-1 radius-0 light-300">Send Message</button>
+                        <button type="submit" class="btn btn-secondary text-white px-md-4 px-2 py-md-3 py-1 radius-0 light-300">Send</button>
                     </div>
                 </div>
             </form>
@@ -363,41 +296,62 @@
 <!-- End Work Sigle -->
 
 <!-- Start Related Post -->
-<article class="container-fluid bg-light">
-    <div class="container">
-        <div class="worksingle-related-header row">
-            <h1 class="h2 py-5">Related Post</h1>
-            <div class="col-md-12 text-left justify-content-center">
-                <div class="row gx-5">
-                    <div class="row d-flex flex-wrap">
-                        {% for estate in similar_estates %}
-                        <div class="col-sm-6 col-lg-4 d-flex align-items-stretch mb-4">
-                            <div class="card related-content text-decoration-none overflow-hidden h-100 w-100">
-                                <a href="{% url 'detail_view' estate.id %}">
-                                    <img class="card-img-top related-img" src="{{ estate.image.url|default_if_none:'#' }}" alt="Estate image">
-                                </a>
-                                <div class="card-body d-flex flex-column p-4">
-                                    <h5 class="card-title h6 m-0 semi-bold-600 text-dark">{{ estate.name }}</h5>
-                                    <p class="card-text pt-2 mb-1 light-300 text-dark">
-                                        {{ estate.description|default:"No description available."|truncatechars:100 }}
-                                    </p>
-                                    <div class="d-flex justify-content-between align-items-center mt-auto">
-                                        <a href="{% url 'detail_view' estate.id %}" class="text-primary light-300">Read more</a>
-                                        <div class="light-300">
-                                            <i class='bx-fw bx bx-heart me-1'></i>31
-                                            <i class='bx-fw bx bx-chat ms-1 me-1'></i>2
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
+<section class="container py-5">
+    {% if similar_estates %}
+    <div class="row">
+        {% for estate in similar_estates %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="position-relative">
+                    {% if estate.image %}
+                    <img src="{{ estate.image.url }}" class="card-img-top" alt="{{ estate.title }}">
+                    {% else %}
+                    <img src="{% static 'default.jpg' %}" class="card-img-top" alt="Default Image">
+                    {% endif %}
+                    <form method="post" action="{% url 'user_favourite_estates' estate.id %}" style="position: absolute; top: 10px; right: 15px;">
+                        {% csrf_token %}
+                        <button
+                                type="submit"
+                                class="btn-favourite {% if estate.id in liked_estates %}active{% endif %} p-0 border-0"
+                                style="background: none;">
+                            {% if estate.id in liked_estates %}
+                            <i class='bx bxs-heart bx-sm' style="color: #ff3366;"></i>
+                            {% else %}
+                            <i class='bx bx-heart bx-sm' style="color: #ff3366;"></i>
+                            {% endif %}
+                        </button>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{{ estate.name }}</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted"><i class='bx bx-map'></i> {{ estate.location }}</span>
+                        <span class="badge bg-primary rounded-pill">{{ estate.category.name }}</span>
+                    </div>
+                    <p class="card-text">{{ estate.description|truncatechars:100 }}</p>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong class="text-primary">${{ estate.price|floatformat:0 }}</strong>
+                        <a href="{% url 'detail_view' estate.id %}" class="btn btn-outline-primary btn-sm">View Details</a>
                     </div>
                 </div>
             </div>
         </div>
-</article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class='bx bx-heart bx-lg text-secondary mb-3'></i>
+        <h3 class="text-secondary">There is no estates for sale yet</h3>
+        <p class="text-muted mb-4">Try to browse a bit later</p>
+        <a href="{% url 'index' %}" class="btn btn-primary">Home</a>
+    </div>
+    {% endif %}
+</section>
 
 
 </html>
 {% endblock %}
+
+
