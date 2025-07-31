@@ -42,6 +42,7 @@ class MyUser(AbstractBaseUser):
     )
     # In User/models.py, add to MyUser class
     otp = models.CharField(max_length=6, null=True, blank=True)
+    is_2fa_enabled = models.BooleanField(default=False)
 
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

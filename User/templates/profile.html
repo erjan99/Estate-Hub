@@ -1,0 +1,65 @@
+{% extends "mainPages/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+
+                    <!-- Avatar -->
+                    {% if user.avatar %}
+                    <img src="{{ user.avatar.url }}" class="rounded-circle border mb-3" style="width: 120px; height: 120px;" alt="User Avatar">
+                    {% else %}
+                    <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" class="rounded-circle border mb-3" style="width: 120px; height: 120px;" alt="Default Avatar">
+                    {% endif %}
+
+                    <!-- Username and Email -->
+                    <h3 class="mb-0">{{ user.username }}</h3>
+                    <p class="text-muted">{{ user.email }}</p>
+
+                    <!-- Details -->
+                    <div class="row mt-4 text-start">
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted">Role</h6>
+                            <p class="mb-0">{{ user.get_role_display }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted">Balance</h6>
+                            <p class="mb-0">${{ user.balance }}</p>
+                            <h6 class="text-muted">2FA Authentication</h6>
+                            <form method="post" action="{% url 'change_2fa' %}" class="form-check">
+                                {% csrf_token %}
+                                <input type="checkbox" class="form-check-input" id="2faToggle" name="choice" {% if user.is_2fa_enabled %}checked{% endif %} onchange="this.form.submit()">
+                                <label class="form-check-label" for="2faToggle">{% if user.is_2fa_enabled %}Enabled{% else %}Disabled{% endif %}</label>
+                            </form>
+
+                        </div>
+
+                        {% if user.otp %}
+                            <div class="col-md-6 mb-3">
+                                <h6 class="text-muted">One-Time Password</h6>
+                                <p class="mb-0">{{ user.otp }}</p>
+                            </div>
+                        {% endif %}
+
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted">Account Status</h6>
+                            <span class="badge bg-success">{{ user.is_active|yesno:"Active,Inactive" }}</span>
+                            {% if user.is_admin %}
+                            <span class="badge bg-dark">Admin</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Optional: Edit button -->
+                    <a href="#" class="btn btn-outline-primary mt-3">Edit Profile</a>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

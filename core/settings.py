@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Estate',
-    'User'
+    'User',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

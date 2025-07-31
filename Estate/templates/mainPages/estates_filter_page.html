@@ -1,0 +1,152 @@
+{% extends 'mainPages/base.html' %}
+{% load static %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<form method="get" class="card p-4 shadow-sm mt-4 mb-4">
+  <h4 class="mb-3">Filter Estates</h4>
+
+  <div class="mb-3">
+    {{ filter.form.price.label_tag }}
+    {{ filter.form.price }}
+  </div>
+
+  <div class="mb-3">
+    {{ filter.form.price__gt.label_tag }}
+    {{ filter.form.price__gt }}
+  </div>
+
+  <div class="mb-3">
+    {{ filter.form.price__lt.label_tag }}
+    {{ filter.form.price__lt }}
+  </div>
+
+  <div class="mb-3">
+    {{ filter.form.city.label_tag }}
+    {{ filter.form.city }}
+  </div>
+
+  <div class="mb-3">
+    {{ filter.form.category.label_tag }}
+    {{ filter.form.category }}
+  </div>
+
+  <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+</form>
+
+
+<section class="container py-5">
+  {% if estates %}
+  <div class="row">
+    {% for estate in estates %}
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="position-relative">
+          {% if estate.image %}
+          <img src="{{ estate.image.url }}" class="card-img-top" alt="{{ estate.title }}">
+          {% else %}
+          <img src="{% static 'default.jpg' %}" class="card-img-top" alt="Default Image">
+          {% endif %}
+          <form method="post" action="{% url 'cards_filter_page' %}?next=favourites" style="position: absolute; top: 10px; right: 15px;">
+            {% csrf_token %}
+            <button
+                    type="submit"
+                    class="btn-favourite active p-0 border-0"
+                    style="background: none;">
+              <i class='bx bxs-heart bx-sm' style="color: #ff3366;"></i>
+            </button>
+          </form>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title text-primary">{{ estate.name }}</h5>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted"><i class='bx bx-map'></i> {{ estate.location }}</span>
+            <span class="badge bg-primary rounded-pill">{{ estate.category.name }}</span>
+          </div>
+          <p class="card-text">{{ estate.description|truncatechars:100 }}</p>
+        </div>
+        <div class="card-footer bg-white border-top-0">
+          <div class="d-flex justify-content-between align-items-center">
+            <strong class="text-primary">${{ estate.price|floatformat:0 }}</strong>
+            <a href="{% url 'detail_view' estate.id %}" class="btn btn-outline-primary btn-sm">View Details</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-5">
+    <i class='bx bx-heart bx-lg text-secondary mb-3'></i>
+    <h3 class="text-secondary">There is no available estates at this moment. Come a little bit later</h3>
+    <a href="{% url 'index' %}" class="btn btn-primary">Home</a>
+  </div>
+  {% endif %}
+</section>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .filter-form {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 400px;
+    margin: auto;
+  }
+
+  .filter-form .form-group {
+    margin-bottom: 15px;
+  }
+
+  .filter-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .filter-form input, .filter-form select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+
+  .filter-form .btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-weight: bold;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .filter-form .btn:hover {
+    background-color: #0056b3;
+  }
+</style>
+{% endblock %}
+

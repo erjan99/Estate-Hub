@@ -106,7 +106,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link btn-outline-primary rounded-pill px-3" href="contact.html">Contact</a>
+                        <a class="nav-link btn-outline-primary rounded-pill px-3" href="{% url 'cards_filter_page' %}">Search</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link btn-outline-primary rounded-pill px-3" href="{% url 'user_favourite_estates_filter' %}">Favourite</a>
@@ -123,21 +123,21 @@
                 </span>
 
                 <div class="user-menu">
-                    <a class="nav-link icon-hover" id="userIcon" href="#">
+                    <a class="nav-link icon-hover" id="userIcon" href="">
                         <i class='bx bx-user-circle bx-sm text-primary'></i>
                     </a>
                     <div class="dropdown-menu" id="userDropdown">
                         {% if user.is_authenticated %}
                         <div class="user-info">
-                            <strong>{{ request.user.username }}</strong>
+                            <a href="{% url 'user_profile' %}"><strong>{{ request.user.username }}</strong></a>
                             <small>{{ request.user.email }}</small>
                         </div>
                         <hr>
-                        <p><a href="">⚙️ Settings</a></p>
-                        <p><a href="{% url 'logout' %}">↪️ Logout</a></p>
+                        <p><a href=""> Settings</a></p>
+                        <p><a href="{% url 'logout' %}"> Logout</a></p>
                         {% else %}
-                        <p><a href="{% url 'login' %}">🔐 Log In</a></p>
-                        <p><a href="{% url 'signup' %}">📝 Sign Up</a></p>
+                        <p><a href="{% url 'login' %}"> Log In</a></p>
+                        <p><a href="{% url 'signup' %}"> Sign Up</a></p>
                         {% endif %}
                     </div>
                 </div>

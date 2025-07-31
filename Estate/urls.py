@@ -11,5 +11,6 @@ urlpatterns = [
   path('favourite/<int:estate_id>/', user_favourite_estates, name='user_favourite_estates'),
   path('favourites/', user_favourite_estates_filter, name='user_favourite_estates_filter'),
   path('feedback/<int:estate_id>/', user_feedback, name='user_feedback'),
-  path('delete_feedback/<int:feedback_id>/', feedback_deletion, name='delete_feedback')
+  path('delete_feedback/<int:feedback_id>/', feedback_deletion, name='delete_feedback'),
+  path('estates_filter/', cards_filter_page, name='cards_filter_page')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

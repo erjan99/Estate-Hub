@@ -1,5 +1,9 @@
 from django.contrib import messages
+from django.contrib.admin.templatetags.admin_list import paginator_number
 from django.shortcuts import render, get_object_or_404, redirect
+from django.core.paginator import Paginator
+
+from .filters import EstateFilter
 from .models import *
 
 def index_view(request):
@@ -102,5 +106,18 @@ def feedback_deletion(request, feedback_id):
     feedback = get_object_or_404(Feedback, id=feedback_id)
     feedback.delete()
     return redirect('detail_view', feedback.estate.id)
+
+
+def cards_filter_page(request):
+    f = EstateFilter(request.GET, queryset=Estate.objects.filter(is_active=True))
+    paginator = Paginator(f.qs, 3)  # or any number per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'mainPages/estates_filter_page.html', {
+        'filter': f,
+        'estates': page_obj,     # FIXED: this is now the paginated result
+        'page_obj': page_obj,
+    })
 
 

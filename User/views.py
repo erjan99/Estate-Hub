@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from .forms import *
@@ -6,6 +7,7 @@ from django.contrib.auth import login, authenticate, logout
 from .services import *
 from django.conf import settings
 from .models import MyUser as User
+
 
 
 def user_register_view(request):
@@ -94,3 +96,26 @@ def user_logout_view(request):
     logout(request)
     messages.success(request, "You logged out successfully!")
     return redirect('index')
+
+@login_required(login_url='login')
+def user_profile_view(request):
+    user = request.user
+    return render(request, 'profile.html', {'user': user})
+
+
+@login_required(login_url='login')
+def is_2fa_enabled(request):
+    if request.method == 'POST':
+        print(request.POST)
+        user = request.user
+
+        user.is_2fa_enabled = 'choice' in request.POST
+        user.save()
+        return redirect('user_profile')
+
+
+
+
+
+
+
